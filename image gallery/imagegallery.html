@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Image Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* --- Futuristic Global Styles --- */
+        body {
+            font-family: 'Share Tech Mono', monospace; /* Techy monospaced font */
+            margin: 0;
+            padding: 20px;
+            background-color: #0d1117; /* Dark, GitHub-like background */
+            color: #e0e0e0; /* Light grey text */
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif; /* Bold, futuristic heading font */
+            text-align: center;
+            color: #00e6e6; /* Cyan glow */
+            text-shadow: 0 0 10px rgba(0, 230, 230, 0.5), 0 0 20px rgba(0, 230, 230, 0.3);
+            margin-bottom: 40px;
+            letter-spacing: 3px;
+        }
+
+        .gallery-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #161b22; /* Slightly lighter dark container */
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 230, 230, 0.1), 0 0 60px rgba(0, 230, 230, 0.05); /* Subtle glow around container */
+        }
+
+        /* --- Filter Buttons --- */
+        .filter-buttons {
+            text-align: center;
+            margin-bottom: 35px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .filter-btn {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            border: 2px solid #00aaff; /* Blue border */
+            background-color: #1a2a3a; /* Dark blue-grey */
+            color: #88eeff; /* Light blue text */
+            border-radius: 5px; /* Slightly sharp corners */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 0 5px rgba(0, 170, 255, 0.3); /* Subtle button glow */
+            letter-spacing: 1px;
+        }
+
+        .filter-btn:hover {
+            background-color: #00aaff; /* Blue fill on hover */
+            color: #0d1117; /* Dark text on hover */
+            box-shadow: 0 0 15px rgba(0, 170, 255, 0.7); /* Stronger glow */
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .filter-btn.active {
+            background-color: #00e6e6; /* Cyan active */
+            color: #0d1117; /* Dark text */
+            border-color: #00e6e6;
+            box-shadow: 0 0 20px rgba(0, 230, 230, 0.8); /* Intense active glow */
+            transform: scale(1.05);
+        }
+
+        /* --- Image Grid --- */
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 230, 230, 0.2); /* Subtle glow */
+            cursor: pointer;
+            transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+            border: 1px solid rgba(0, 230, 230, 0.1); /* Thin accent border */
+            position: relative; /* For the glitch effect */
+        }
+
+        /* Glitch overlay on hover */
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 230, 230, 0.2) 0%, rgba(255, 0, 255, 0.2) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1; /* Ensure it's above the image */
+        }
+
+        .gallery-item:hover::before {
+            opacity: 0.8; /* Show the overlay on hover */
+            animation: glitch-anim 0.5s infinite step-end; /* Glitch animation */
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px; /* Fixed height for consistency */
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease-out, filter 0.4s ease-out;
+        }
+
+        /* --- Hover Effect --- */
+        .gallery-item:hover {
+            transform: scale(1.05) rotateZ(1deg); /* Slight lift and rotation */
+            box-shadow: 0 0 25px rgba(0, 230, 230, 0.6), 0 0 40px rgba(255, 0, 255, 0.3); /* Stronger dual-color glow */
+            border-color: #00e6e6; /* Brighter border */
+            z-index: 2; /* Bring to front slightly */
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.15); /* More intense zoom */
+            filter: brightness(1.1) saturate(1.2); /* Subtle filter on hover */
+        }
+
+        /* Hide items for filtering */
+        .gallery-item.hide {
+            display: none;
+        }
+
+        /* --- Lightbox (Modal) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(13, 17, 23, 0.95); /* Very dark, almost opaque */
+            backdrop-filter: blur(8px); /* Frosted glass effect */
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+        }
+
+        .lightbox.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 85vh;
+            animation: fadeInScale 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Bounce-in animation */
+            border: 2px solid #00e6e6; /* Cyan border */
+            box-shadow: 0 0 30px rgba(0, 230, 230, 0.8); /* Intense glow */
+            border-radius: 10px;
+            overflow: hidden; /* For rounded corners on image */
+        }
+
+        .lightbox-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+            border-radius: 8px; /* Slightly rounded corners */
+        }
+
+        /* --- Lightbox Controls --- */
+        .close-btn, .prev-btn, .next-btn {
+            position: absolute;
+            color: #00e6e6; /* Cyan for controls */
+            font-family: 'Orbitron', sans-serif;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s ease, transform 0.2s ease, text-shadow 0.2s ease;
+            text-shadow: 0 0 8px rgba(0, 230, 230, 0.6);
+            z-index: 2001; /* Above lightbox content */
+        }
+
+        .close-btn:hover, .prev-btn:hover, .next-btn:hover {
+            color: #88eeff; /* Lighter cyan on hover */
+            transform: scale(1.1);
+            text-shadow: 0 0 15px rgba(0, 230, 230, 1), 0 0 20px rgba(255, 0, 255, 0.5); /* Dual glow */
+        }
+
+        .close-btn {
+            top: 20px;
+            right: 30px;
+            font-size: 50px;
+        }
+
+        .prev-btn {
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .next-btn {
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeInScale {
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes glitch-anim {
+            0% {
+                clip: rect(35px, 9999px, 80px, 0);
+                transform: skew(0.5deg);
+            }
+            10% {
+                clip: rect(20px, 9999px, 60px, 0);
+                transform: skew(-0.8deg);
+            }
+            20% {
+                clip: rect(50px, 9999px, 90px, 0);
+                transform: skew(0.3deg);
+            }
+            30% {
+                clip: rect(10px, 9999px, 70px, 0);
+                transform: skew(-0.6deg);
+            }
+            40% {
+                clip: rect(60px, 9999px, 100px, 0);
+                transform: skew(0.9deg);
+            }
+            50% {
+                clip: rect(0px, 9999px, 40px, 0);
+                transform: skew(-0.4deg);
+            }
+            60% {
+                clip: rect(70px, 9999px, 110px, 0);
+                transform: skew(0.7deg);
+            }
+            70% {
+                clip: rect(30px, 9999px, 85px, 0);
+                transform: skew(-0.2deg);
+            }
+            80% {
+                clip: rect(45px, 9999px, 95px, 0);
+                transform: skew(0.4deg);
+            }
+            90% {
+                clip: rect(25px, 9999px, 75px, 0);
+                transform: skew(-0.7deg);
+            }
+            100% {
+                clip: rect(35px, 9999px, 80px, 0);
+                transform: skew(0.5deg);
+            }
+        }
+        
+        /* --- Responsive Design --- */
+        @media (min-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                gap: 25px;
+            }
+            .gallery-item img {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gallery-container">
+        <h1>// Image Gallery \\</h1>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="nature">LAND SCAPES</button>
+            <button class="filter-btn" data-filter="city">URBAN</button>
+            <button class="filter-btn" data-filter="animal">ANIMALS</button>
+        </div>
+
+        <div class="image-grid">
+            <div class="gallery-item" data-category="nature">
+                <img src="photo/nt1.jpg" alt="Misty forest path data_stream">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="photo/download (1).jpeg" alt="City street with holographic traffic">
+            </div>
+            <div class="gallery-item" data-category="animal">
+                <img src="photo/anm1.jpg" alt="Augmented reality brown puppy">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="photo/nt2.jpg" alt="Quantum field lake with floating islands">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="photo/download (2).jpeg" alt="Cyberpunk city skyline at synthetic dusk">
+            </div>
+            <div class="gallery-item" data-category="animal">
+                <img src="photo/anm2.jpg" alt="Bionic Vulture in profile">
+            </div>
+            <div class="gallery-item" data-category="nature">
+                <img src="photo/nt3.jpg" alt="Digital ocean waves crashing on crystalline rocks">
+            </div>
+            <div class="gallery-item" data-category="city">
+                <img src="photo/download.jpeg" alt="Old colorful building facade with neon traces">
+            </div>
+             <div class="gallery-item" data-category="animal">
+                <img src="photo/anm3.jpg" alt="Artificially enhanced Fox in the simulated snow">
+            </div>
+             <div class="gallery-item" data-category="nature">
+                <img src="photo/nt4.jpg" alt="Bio-luminescent field of yellow flowers">
+            </div>
+             <div class="gallery-item" data-category="city">
+                <img src="photo/images.jpeg" alt="Massive skyscraper from drone perspective">
+            </div>
+             <div class="gallery-item" data-category="animal">
+                <img src="photo/anm5.jpg" alt="Robotic black puppy sitting">
+            </div>
+        </div>
+    </div>
+
+    <div class="lightbox">
+        <span class="close-btn">[X]</span>
+        <span class="prev-btn">&lt; PREV</span>
+        <span class="next-btn">NEXT &gt;</span>
+        <div class="lightbox-content">
+            <img class="lightbox-img" src="" alt="Lightbox image">
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            const lightbox = document.querySelector('.lightbox');
+            const lightboxImg = document.querySelector('.lightbox-img');
+            const closeBtn = document.querySelector('.close-btn');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+
+            let visibleItems = [];
+            let currentIndex = 0;
+
+            function filterGallery(filter) {
+                visibleItems = [];
+                
+                galleryItems.forEach(item => {
+                    const category = item.dataset.category;
+                    const shouldShow = (filter === 'all' || filter === category);
+                    
+                    if (shouldShow) {
+                        item.classList.remove('hide');
+                        visibleItems.push(item);
+                    } else {
+                        item.classList.add('hide');
+                    }
+                });
+                attachLightboxListeners();
+            }
+
+            function attachLightboxListeners() {
+                visibleItems.forEach((item, index) => {
+                    item.onclick = () => {
+                        openLightbox(index);
+                    };
+                });
+            }
+
+            function openLightbox(index) {
+                currentIndex = index;
+                const imgSrc = visibleItems[currentIndex].querySelector('img').src;
+                const imgAlt = visibleItems[currentIndex].querySelector('img').alt;
+                
+                lightboxImg.src = imgSrc;
+                lightboxImg.alt = imgAlt;
+                lightbox.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeLightbox() {
+                lightbox.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+
+            function showNext() {
+                currentIndex = (currentIndex + 1) % visibleItems.length;
+                updateLightboxImage();
+            }
+
+            function showPrev() {
+                currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+                updateLightboxImage();
+            }
+
+            function updateLightboxImage() {
+                const imgSrc = visibleItems[currentIndex].querySelector('img').src;
+                const imgAlt = visibleItems[currentIndex].querySelector('img').alt;
+                lightboxImg.src = imgSrc;
+                lightboxImg.alt = imgAlt;
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelector('.filter-btn.active').classList.remove('active');
+                    button.classList.add('active');
+                    const filter = button.dataset.filter;
+                    filterGallery(filter);
+                });
+            });
+
+            closeBtn.addEventListener('click', closeLightbox);
+            prevBtn.addEventListener('click', showPrev);
+            nextBtn.addEventListener('click', showNext);
+
+            lightbox.addEventListener('click', (e) => {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (lightbox.classList.contains('show')) {
+                    if (e.key === 'Escape') {
+                        closeLightbox();
+                    } else if (e.key === 'ArrowLeft') {
+                        showPrev();
+                    } else if (e.key === 'ArrowRight') {
+                        showNext();
+                    }
+                }
+            });
+
+            filterGallery('all');
+        });
+    </script>
+
+</body>
+</html>

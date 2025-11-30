@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garv Gupta | Portfolio</title>
+    <!-- 
+        CRITICAL STABILITY UPDATE: Removed external Google Fonts link 
+        to ensure styling persistence. We are now using a reliable, 
+        system-native font stack. 
+    -->
+    <style>
+        /*
+        * BASE STYLES AND RESETS
+        */
+        :root {
+            --primary-color: #4b88f3; /* Vibrant Blue */
+            --secondary-color: #2b2b3a; /* Darker Blue-Grey */
+            --background-color: #1a1a2e; /* Deep Violet-Blue Background */
+            --text-color: #f0f0f5; /* Off-White Text */
+            --accent-light: #7cacf7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            /* Now using a robust system font stack for 100% reliability */
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-light);
+        }
+
+        /*
+        * LAYOUT
+        */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(75, 136, 243, 0.2);
+            min-height: 80vh;
+        }
+
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: var(--text-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px;
+        }
+
+        /*
+        * NAVIGATION
+        */
+        header {
+            background-color: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(5px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li a {
+            margin-left: 25px;
+            color: var(--text-color);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-links li a::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: width 0.3s;
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+        }
+
+        .nav-links li a:hover::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 30px;
+            height: 25px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background: var(--text-color);
+            border-radius: 5px;
+            transition: all 0.3s linear;
+        }
+
+        /*
+        * BUTTONS
+        */
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            box-shadow: 0 5px 15px rgba(75, 136, 243, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(75, 136, 243, 0.6);
+            color: var(--background-color); /* Maintain color */
+        }
+
+        .btn-secondary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            background-color: transparent;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+
+        /*
+        * HOME SECTION (HERO)
+        */
+        #home {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+
+        .hero-text {
+            flex: 2;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            line-height: 1.1;
+        }
+
+        .hero-text h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero-text h3 {
+            font-size: 1.8rem;
+            font-weight: 400;
+            color: var(--accent-light);
+            margin-bottom: 20px;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 5px solid var(--primary-color);
+            box-shadow: 0 0 30px rgba(75, 136, 243, 0.5);
+            overflow: hidden; /* Important to keep image contained within the border-radius */
+        }
+        
+        /* New style to ensure the image fills the circular container */
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /*
+        * SKILLS SECTION
+        */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .skill-card {
+            background-color: var(--secondary-color);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            background-color: #383850; /* Slightly lighter on hover */
+        }
+
+        .skill-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .skill-card p {
+            font-weight: 600;
+        }
+
+        /*
+        * PROJECTS SECTION
+        */
+        .project-item {
+            display: flex;
+            background-color: var(--secondary-color);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            overflow: hidden;
+            transition: transform 0.4s ease;
+        }
+
+        .project-item:hover {
+            transform: scale(1.02);
+        }
+
+        /* Container for the image, provides fixed size */
+        .project-image-placeholder {
+            min-width: 350px;
+            height: 250px;
+            background-color: #2b2b3a; /* Fallback/Container BG */
+            overflow: hidden;
+        }
+        
+        /* Ensure the image fills the container */
+        .project-image-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .project-details {
+            padding: 30px;
+        }
+
+        .project-details h3 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .project-details p {
+            margin-bottom: 15px;
+        }
+
+        .project-links a {
+            margin-right: 20px;
+            font-weight: 600;
+        }
+        
+        /*
+        * RESUME SECTION
+        */
+        .resume-download {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .experience-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            position: relative;
+        }
+
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: var(--secondary-color);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            background-color: var(--secondary-color);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            width: 45%;
+            position: relative;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            box-shadow: 0 0 20px var(--primary-color);
+        }
+
+        .timeline-item:nth-child(even) {
+            align-self: flex-end;
+        }
+
+        .timeline-item:nth-child(odd) {
+            align-self: flex-start;
+        }
+
+        .timeline-item::before {
+            content: '•';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            background-color: var(--background-color);
+            padding: 0 10px;
+            z-index: 1;
+        }
+
+        .timeline-item:nth-child(odd)::before {
+            right: -25px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -25px;
+        }
+
+        .timeline-item h4 {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        .timeline-item .duration {
+            font-size: 0.9rem;
+            color: var(--accent-light);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+
+        /*
+        * CONTACT SECTION
+        */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--secondary-color);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #3c3c52;
+            background-color: #1a1a2e;
+            color: var(--text-color);
+            border-radius: 5px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn-submit {
+            width: 100%;
+            border: none;
+            cursor: pointer;
+        }
+
+        /*
+        * FOOTER
+        */
+        footer {
+            background-color: var(--secondary-color);
+            padding: 30px 0;
+            text-align: center;
+        }
+
+        .social-links {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .social-links a {
+            margin: 0 15px;
+            color: var(--text-color);
+        }
+
+        /*
+        * ANIMATIONS (Pure CSS & JS Triggered)
+        */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-on-load {
+            opacity: 0;
+            /* Default hidden state */
+        }
+
+        .section-visible {
+            opacity: 1;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Delay stagger effect */
+        .section-visible:nth-child(2) { animation-delay: 0.2s; }
+        .section-visible:nth-child(3) { animation-delay: 0.4s; }
+
+        /*
+        * MEDIA QUERIES (RESPONSIVENESS)
+        */
+        @media (max-width: 900px) {
+            .hero-content {
+                flex-direction: column-reverse;
+                text-align: center;
+            }
+
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-text h3 {
+                font-size: 1.5rem;
+            }
+
+            .hero-image {
+                margin-bottom: 40px;
+            }
+
+            .project-item {
+                flex-direction: column;
+            }
+
+            .project-image-placeholder {
+                min-width: 100%;
+                height: 200px; /* Adjust height for smaller screens */
+            }
+
+            .experience-timeline::before {
+                left: 15px; /* Move timeline line to the left */
+            }
+            .timeline-item {
+                width: 100%;
+                align-self: flex-end; /* All items aligned to the right, relative to the line */
+                padding-left: 50px;
+            }
+            .timeline-item:nth-child(odd)::before,
+            .timeline-item:nth-child(even)::before {
+                left: -15px; /* Point to the new line position */
+                right: auto;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 60px; /* Below the header */
+                left: 0;
+                width: 100%;
+                flex-direction: column;
+                background-color: var(--background-color);
+                border-top: 1px solid var(--secondary-color);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+                display: none; /* Hidden by default */
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                text-align: center;
+                margin: 0;
+                padding: 15px 0;
+                border-bottom: 1px solid var(--secondary-color);
+            }
+
+            .nav-links li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-links li a {
+                margin: 0;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#home" class="logo">Garv Gupta</a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#resume">Resume</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- 1. Home / Hero Section -->
+        <section id="home" class="animate-on-load">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Hello, I'm <span>Garv Gupta</span></h1>
+                    <h3>Software Developer & DevOps Engineer</h3>
+                    <p>I specialize in building scalable, secure, and high-performance web applications andfocusing on creating robust, automated CI/CD pipelines. Turning complex ideas into elegant, functional reality is my passion.</p>
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+                <div class="hero-image">
+                    <div class="profile-pic">
+                        <!-- Profile Photo Placeholder: Using a reliable external placeholder service with a robust fallback -->
+                        <img 
+                            src="photo/WhatsApp Image 2025-10-26 at 01.08.08_1419fd1a.jpg" 
+                            alt="Garv Profile Photo Placeholder" 
+                            onerror="this.onerror=null;this.src='https://placehold.co/250x250/2b2b3a/f0f0f5?text=PFP';"
+                        >
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. About Section -->
+        <section id="about" class="animate-on-load">
+            <h2>About Me</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center;">
+                <p style="margin-bottom: 20px; font-size: 1.1rem;">
+                    I am a **Computer Science student** passionate about the entire software development lifecycle, from initial concept to deployment and maintenance. 
+                </p>
+                <p style="margin-bottom: 20px;">
+                    Crucially, I also specialize in **DevOps practices**. I routinely implement CI/CD pipelines, manage infrastructure using Docker, and practice automated testing to ensure seamless, reliable deployments. 
+                </p>
+            </div>
+        </section>
+
+        <!-- 3. Skills Section -->
+        <section id="skills" class="animate-on-load">
+            <h2>Technical Toolkit</h2>
+            <div class="skills-grid">
+                <!-- Backend Languages & Tools -->
+                <div class="skill-card">
+                    <span class="skill-icon">PY</span>
+                    <p>Python</p>
+                </div>
+                <!-- Databases -->
+                <div class="skill-card">
+                    <span class="skill-icon">DB</span>
+                    <p>MongoDB</p>
+                </div>
+                <!-- Frontend/Styling -->
+                <div class="skill-card">
+                    <span class="skill-icon">CSS</span>
+                    <p>Bootstrap</p>
+                </div>
+                <!--NodeJS-->
+                <div class="skill-card">
+                    <span class="skill-icon">NodeJS</span>
+                    <p>NodeJS</p>
+                </div>
+                <!-- DevOps -->
+                <div class="skill-card">
+                    <span class="skill-icon">CI/CD</span>
+                    <p>CI/CD Automation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Projects Section -->
+        <section id="projects" class="animate-on-load">
+            <h2>Featured Projects</h2>
+            
+            <div class="project-item">
+                <div class="project-image-placeholder">
+                    <!-- Image Placeholder 1: Python Inventory -->
+                    <img 
+                        src="https://placehold.co/350x250/2b2b3a/4b88f3?text=Inventory+System" 
+                        alt="Placeholder image for Inventory Management Platform"
+                        onerror="this.onerror=null;this.src='https://placehold.co/350x250/2b2b3a/f0f0f5?text=Image';"
+                    >
+                </div>
+                <div class="project-details">
+                    <h3>Trako</h3>
+                    <p>Trako is a platform by which you can avoid your any payment related renewals,Trako reminds you, Trako is fully secured as it runs over user browser local storage only</p>
+                    <p style="font-style: italic; color: var(--accent-light);">Technologies: **HTNL**, **CSS**, **Bootstrap**,**Vanilla Javascript**</p>
+                    <div class="project-links">
+                        
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-image-placeholder">
+                    <!-- Image Placeholder 2: MongoDB API -->
+                    <img 
+                        src="https://placehold.co/350x250/2b2b3a/4b88f3?text=AI+Powered+Platform" 
+                        alt="Placeholder image for PM SYSTEM"
+                        onerror="this.onerror=null;this.src='https://placehold.co/350x250/2b2b3a/f0f0f5?text=Image';"
+                    >
+                </div>
+                <div class="project-details">
+                    <h3>AI recommended PM Internship Portal</h3>
+                    <p>AI-driven solutions: opportunity recommended through the AI PM Internship Portal for Internships and Jobs</p>
+                    <p style="font-style: italic; color: var(--accent-light);">Technologies: **Bootstrap**, **Python**, **Tensor Flow**</p>
+                    <div class="project-links">
+                       
+                    </div>
+                </div>
+               
+            </div>
+        </section>
+
+        <!-- 5. Resume / Experience Section -->
+        <section id="resume" class="animate-on-load">
+            <h2>Experience & Education</h2>
+            
+            <div class="resume-download">
+                <p style="margin-bottom: 10px;">For a full professional history, download my resume:</p>
+                <a href="resume.pdf" class="btn btn-primary" download>
+                    Download Resume (PDF)
+                </a>
+            </div>
+
+            <div class="experience-timeline">
+                <div class="timeline-item">
+                    <h4>Frontend Developer</h4>
+                    <span class="duration">Code Alpha | 2025 - Present</span>
+                    <p>Lead developer on core product features, overseeing code reviews and technical architecture for scalable cloud solutions.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Full-stack Developer</h4>
+                    <span class="duration">Edunet| 2024-2025</span>
+                    <p>Contributed to full-stack development of a major client-facing application, resulting in a 25% increase in user engagement.</p>
+                </div>
+                
+                
+            </div>
+        </section>
+
+        <!-- 6. Contact Section -->
+        <section id="contact" class="animate-on-load">
+            <h2>Get In Touch</h2>
+            <div class="contact-form">
+                <p style="text-align: center; margin-bottom: 30px;">
+                    I'm currently open to new opportunities. Send me a message!
+                </p>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-submit">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; Garv Gupta. All rights reserved.</p>
+            <div class="social-links">
+                <a href="https://github.com/garvcodes711" target="_blank">GitHub</a>
+                <a href="https://www.linkedin.com/in/garv-gupta-b9bb70287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank">LinkedIn</a>
+               
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for responsiveness and animations -->
+    <script>
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const sections = document.querySelectorAll('section');
+
+        // 1. Mobile Menu Toggle
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active'); // Close menu on link click
+            });
+        });
+
+        // 2. Intersection Observer for Scroll Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1 // 10% visibility to trigger
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                // The 'home' section animates immediately on load, others animate on scroll.
+                if (entry.isIntersecting || entry.target.id === 'home') {
+                    entry.target.classList.add('section-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        // Attach observer to all sections
+        window.addEventListener('load', () => {
+            sections.forEach(section => {
+                // Immediately show the home section without waiting for scroll
+                if (section.id === 'home') {
+                    section.classList.add('section-visible');
+                } else {
+                    observer.observe(section);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
